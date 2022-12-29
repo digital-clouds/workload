@@ -9,17 +9,14 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: 'read'
+  id-token: 'write'
+
 jobs:
   job_id:
     name: '🆙 GCP'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        bucket: [digital-space, gcp-space]
-      fail-fast: false
-    permissions:
-      contents: 'read'
-      id-token: 'write'
     timeout-minutes: 15
 
     if: github.repository == 'digital-clouds/workload'
