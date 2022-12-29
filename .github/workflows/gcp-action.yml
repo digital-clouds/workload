@@ -1,0 +1,32 @@
+name: '🔵 GCP Action'
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  job_id:
+    name: '🆙 GCP'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        bucket: [digital-space, gcp-space]
+      fail-fast: false
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    timeout-minutes: 15
+
+    if: github.repository == 'digital-clouds/workload'
+    steps:
+      - uses: 'actions/checkout@v3'
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: '${{ secrets.ORG_ID_PROVIDER }}'
+          service_account: '${{ secrets.ORG_SERVICE_ACCOUNT }}'
